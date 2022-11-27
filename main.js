@@ -14,6 +14,8 @@ class Field {
         this.width = array[0].length
     }
 
+    // finds starting point
+
     findStart(){
       let start = 0
       for(let i=0; i<this.array.length; i++) {
@@ -25,6 +27,7 @@ class Field {
       } return start
     }
 
+    // determines location of hat
     hatLocation() {
       let end = 0
       for(let l=0; l<this.array.length; l++) {
@@ -37,6 +40,7 @@ class Field {
     }
 
 
+    // moves and updates location
     movement(command) {
 
       if (command === 'up') {
@@ -53,30 +57,66 @@ class Field {
       }
     }
 
+    // loops through movements and checks position
     play() {
       this.next = [0,0]
+      let char = this.array[this.next[0]][this.next[1]]
       let end = this.hatLocation()
       while (!foundHat) {
       let command = prompt('Which way do you want to go? Please type either up, down, left or right.')
       this.movement(command)
 
       if (this.next[1] < 0 || this.next[1] >= this.width) {
-        return console.log('You have left the field idiot')
+        return console.log('You have left the field')
          }
-      else if (this.next[0] < 0 || this.next[0] >= this.length) {
-        return console.log('You have left the field idiot')
+      else if (this.next[0] < 0 || this.next[0] === this.length) {
+        return console.log('You have left the field')
          } 
       else if (this.next.toString() === end.toString()) {
         return console.log('You found your hat!')
+         }
+       else if (char === '0') {
+         return console.log('You fell in a hole!')
       }
       }
     }
 
+    static newboard (height,width) {
+      let boardLength = height
+      let boardWidth = width
+      let board = []
+      let star = '*'
+      let hole = '0'
+      let hat = '^'
+
+      for (let u=0; u < boardLength; u++ ) {
+        let array = []
+        for (let t=0; t< boardWidth; t++) {
+          let rand = Math.floor(Math.random()*3)
+          array.push('░')
+        }
+        board.push(array)
+      }
+
+      for (let q=0; q < boardLength; q++) {
+        board[q][Math.floor(Math.random()*boardWidth)] = '0'
+      }
+
+      board[0][Math.floor(Math.random()*boardWidth)] = '*'
+      board[boardLength-1][Math.floor(Math.random()*boardWidth)] = '^'
+      return board
+
+    }
+
+    //prints board
     print() {
       for (let p=0; p<this.array.length; p++) {
         console.log(this.array[p])
       }
     }
+
+
+
 }
 
 const myField = new Field(
@@ -85,6 +125,3 @@ const myField = new Field(
     ['░','^','░']]
     )
 const foundHat = false
-
-myField.print()
-myField.play()
